@@ -15,7 +15,9 @@ You can use this website for conversion - https://www.ilovepdf.com/jpg_to_pdf
 
 THEN UPLOAD that single pdf file in Canvas.
 
-Use NODEJS and Express Server.  If you want to use any other server like nginx / tomcat or Technology like Java etc, you can do it.
+<br><br>
+
+### Use NODEJS and Express Server.  If you want to use any other server like nginx / tomcat or Technology like Java etc, you can do it.
 
 <br><br>
 
@@ -41,15 +43,19 @@ Use NODEJS and Express Server.  If you want to use any other server like nginx /
 
 10. INSTALL NodeJS and npm - Command Screen Shot.
 
-11. a. Create Github Account 
+11. Github repo/push:
 
-11. b. Create a repository
+    a. Create Github Account 
 
-12. c. Push / Upload your NodeJS Services ( code file + Package.json) in the github - Command Screen Shot.
+    b. Create a repository
 
-13. a. Check git is installed or not - Command  Screen Shot.
+    c. Push / Upload your NodeJS Services ( code file + Package.json) in the github - Command Screen Shot.
 
-13. b. If not then Install Git on the EC2 instance - Command  Screen Shot.
+13. Github Verification:
+
+    a. Check git is installed or not - Command  Screen Shot.
+
+    b. If not then Install Git on the EC2 instance - Command  Screen Shot.
 
 14. Clone your code from Github to EC2 instance - Command Screen Shot
 
