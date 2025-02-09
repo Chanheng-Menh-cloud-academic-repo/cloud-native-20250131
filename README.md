@@ -1,5 +1,5 @@
 # cloud-native-20250131
-## Project 1 - Run Different Services on Express Web Server on EC2 and View from your
+## Project 1 - Run Different Services on Express Web Server on EC2 and View from your Browser
 <br><br>
 ### Submission PROCESS
 
