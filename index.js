@@ -5,67 +5,207 @@ http.createServer(function (req, res) {
   res.end(); //end the response
 }).listen(80) // the server object listens on port 80
 
-const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
-app.use(express.json());
+const e1 = require('express');
+var app = e1();
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/cloudnativedb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+var bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
+
+/*
+create table empdetails ( empid int NOT NULL AUTO_INCREMENT, 
+name varchar(50), emailid varchar(50), pass varchar(25), 
+salary double, PRIMARY KEY (empid))
+
+*/
+
+/*
+In the postman use the following URL
+localhost:5000/reg
+
+{
+  "name":"Joe",
+  "emailid":"a@gmail.com",
+  "pass":"abc",
+  "salary":3000
+}
+
+*/
+
+//REG API
+app.post('/reg', (req, res) => {
+  const { name, emailid, pass, salary } = req.body;
+
+  dbconnect.query('insert into empdetails (name, emailid, pass, salary) values (?, ?, ?, ?)', [name, emailid, pass, salary], (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error creating user');
+      } else {
+          res.status(200).send('Emp Record inserted successfully');
+      }
+  });
 });
 
-const UserSchema = new mongoose.Schema({
-  id: String,
-  username: String,
-  email: String,
-  password: String,
+
+
+/*
+In the postman use the following URL
+localhost:5000/reg
+
+{
+  "name":"Joe",
+  "emailid":"a@gmail.com",
+  "pass":"abc",
+  "salary":3000
+}
+*/
+
+//REG API
+app.post('/reg', (req, res) => {
+  const { name, emailid, pass, salary } = req.body;
+
+  dbconnect.query('insert into empdetails (name, emailid, pass, salary) values (?, ?, ?, ?)', [name, emailid, pass, salary], (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error creating user');
+      } else {
+          res.status(200).send('Emp Record inserted successfully');
+      }
+  });
 });
 
-const User = mongoose.model('User', UserSchema);
+/*
+In the postman use the following URL :- Select GET
+localhost:5000/view
+*/
 
-// Registration API
-app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-  const existingUser = await User.findOne({ email });
-  if (existingUser) return res.status(400).json({ message: 'User already exists' });
-  
-  const newUser = new User({ username, email, password });
-  await newUser.save();
-  res.status(201).json({ message: 'User registered successfully' });
+//VIEW ALL API GET
+app.get('/view', (req, res) => {
+  dbconnect.query('SELECT * FROM empdetails', (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error retrieving users');
+      } else {
+          res.status(200).json(results);
+      }
+  });
 });
 
-// Login API
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email, password });
-  if (!user) return res.status(400).json({ message: 'Invalid credentials' });
-  res.json({ message: 'Login successful' });
+
+
+/*
+In the postman use the following URL
+localhost:5000/reg
+
+{
+  "name":"Joe",
+  "emailid":"a@gmail.com",
+  "pass":"abc",
+  "salary":3000
+}
+*/
+
+//REG API
+app.post('/reg', (req, res) => {
+  const { name, emailid, pass, salary } = req.body;
+
+  dbconnect.query('insert into empdetails (name, emailid, pass, salary) values (?, ?, ?, ?)', [name, emailid, pass, salary], (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error creating user');
+      } else {
+          res.status(200).send('Emp Record inserted successfully');
+      }
+  });
 });
 
-// Search API
-app.get('/users', async (req, res) => {
-  const users = await User.find({}, 'id username email');
-  res.json(users);
+/*
+In the postman use the following URL :- Select GET
+localhost:5000/view
+*/
+
+//VIEW ALL EMPLOYEE API GET
+app.get('/view', (req, res) => {
+  dbconnect.query('SELECT * FROM empdetails', (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error retrieving users');
+      } else {
+          res.status(200).json(results);
+      }
+  });
 });
 
-// Update Profile API
-app.put('/update/:id', async (req, res) => {
-  const { id } = req.params;
-  const { username, email } = req.body;
-  const updatedUser = await User.findByIdAndUpdate(id, { username, email }, { new: true });
-  if (!updatedUser) return res.status(404).json({ message: 'User not found' });
-  res.json({ message: 'Profile updated successfully' });
+/*
+In the postman use the following URL :- Select GET
+localhost:5000/search/1
+*/
+
+//SEARCH EMPLOYEE API GET
+app.get('/search/:id', (req, res) => {
+  const eid = req.params.id;
+  dbconnect.query('select * from empdetails where empid=?', [eid], (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error retrieving users');
+      } else {
+          res.status(200).json(results);
+      }
+  });
 });
 
-// Delete User API
-app.delete('/delete/:id', async (req, res) => {
-  const { id } = req.params;
-  const deletedUser = await User.findByIdAndDelete(id);
-  if (!deletedUser) return res.status(404).json({ message: 'User not found' });
-  res.json({ message: 'User deleted successfully' });
+
+
+/*
+In the postman use the following URL:- Select DELETE
+localhost:5000/remove/2
+
+*/
+
+//Delete API
+// Delete a user by ID
+app.delete('/remove/:id', (req, res) => {
+  const eid = req.params.id;
+
+  dbconnect.query('delete from empdetails where empid = ?', [eid], (error, results) => {
+      if (error) {
+          console.error(error);
+          res.status(500).send('Error deleting Employee');
+  } else {
+      res.status(200).send('Employee deleted successfully');
+  }
+  });
 });
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+/*
+In the postman use the following URL :- Select PUT
+localhost:5000/update/1
+
+{
+  "name":"chan",
+  "pass":"xyz"
+}
+
+*/
+
+// Update a user by ID
+app.put('/update/:id', (req, res) => {
+  const eid = req.params.id;
+  const { name, pass } = req.body;
+
+  dbconnect.query('update empdetails set name = ?, pass = ? where empid = ?', [name, pass, eid], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Error updating user');
+    } else {
+      res.status(200).send('Employee updated successfully');
+    }
+  })
+});
+
+
+
+// START THE EXPRESS SERVER. 5000 is the PORT NUMBER
+app.listen(5000, () => console.log('EXPRESS Server Started at Port No: 5000'));
